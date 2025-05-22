@@ -23,7 +23,8 @@ green = (178, 205, 156) # player2
 # Standing and Jumping Sprite
 STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/standing.png"), (50, 80))
 JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping.png"), (50, 80))
-
+STANDING_LEFT = pygame.transform.flip(STANDING_PIXEL, flip_x=1, flip_y=0)
+JUMPING_LEFT = pygame.transform.flip(JUMPING_PIXEL, flip_x=1, flip_y=0)
 # # # #Character# # # #
 # Start Location
 x = 50
@@ -32,6 +33,7 @@ CHAR_W = 50
 CHAR_H = 80
 CHAR_VEL_X = 5 # Velocity
 JUMP = False
+DIRECTION_RIGHT = True
 
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
@@ -53,26 +55,38 @@ while running:
     keys = pygame.key.get_pressed() # checks keypress
     if keys[pygame.K_LEFT] and x > 0 + (CHAR_W/2):
         x -= CHAR_VEL_X
+        DIRECTION_RIGHT = False
     if keys[pygame.K_RIGHT] and x < 800 - (CHAR_W/2):
         x += CHAR_VEL_X
-
+        DIRECTION_RIGHT = True
+    
     # if space is pressed, jump is true
     if not JUMP and keys[pygame.K_SPACE]:
         JUMP = True
     # When jump is true, y location is changed by amount of char velocity until the velocity reaches {value} which 
     # will go down to negative so it simulates a jump.
     if JUMP:
+        # THIS IF/ELSE CHECKS FACING DIRECTION
+        if not DIRECTION_RIGHT:
+            player_rect = STANDING_LEFT.get_rect(center=(x,y))
+            screen.blit(JUMPING_LEFT, player_rect)
+        else:
+            player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+            screen.blit(JUMPING_PIXEL, player_rect)
+
         y -= Y_VELOCITY
         Y_VELOCITY -= Y_GRAVITY
         if Y_VELOCITY < -JUMP_HEIGHT:
             JUMP = False
             Y_VELOCITY = JUMP_HEIGHT
-        player_rect = STANDING_PIXEL.get_rect(center=(x, y))
-        screen.blit(JUMPING_PIXEL, player_rect)
+            
     else:
-        player_rect = STANDING_PIXEL.get_rect(center=(x, y))
-        screen.blit(STANDING_PIXEL, player_rect)
-
+        if not DIRECTION_RIGHT:  
+            player_rect = STANDING_LEFT.get_rect(center=(x, y))
+            screen.blit(STANDING_LEFT, player_rect)
+        else:
+            player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+            screen.blit(STANDING_PIXEL, player_rect)
     #-#-#-#-#-#-#-#-#-#
 
     pygame.time.delay(10)
