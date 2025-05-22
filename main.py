@@ -4,6 +4,7 @@ import sys
 
 # Initialize Pygame
 pygame.init()
+pygame.font.init()
 
 # Create Window
 # Set width and height for window
@@ -12,7 +13,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("Sidescroller Game") # Title
 CLOCK = pygame.time.Clock()
-
+FONT = pygame.font.SysFont("Arial", 24)
 
 # Colors
 beige = (240, 242, 189) # background
@@ -20,15 +21,16 @@ orange = (202, 120, 66) # player1
 green = (178, 205, 156) # player2
 
 
+# # # #Character# # # #
+
 # Standing and Jumping Sprite
 STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/standing.png"), (50, 80))
-JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping.png"), (50, 80))
+JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping.png"), (60, 80))
 STANDING_LEFT = pygame.transform.flip(STANDING_PIXEL, flip_x=1, flip_y=0)
 JUMPING_LEFT = pygame.transform.flip(JUMPING_PIXEL, flip_x=1, flip_y=0)
-# # # #Character# # # #
-# Start Location
-x = 50
-y = 240
+
+x = 50 # x location
+y = 240 # y location
 CHAR_W = 50
 CHAR_H = 80
 CHAR_VEL_X = 5 # Velocity
@@ -38,6 +40,17 @@ DIRECTION_RIGHT = True
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
 Y_VELOCITY = JUMP_HEIGHT
+
+# # # #COINS# # # #
+#    pygame.draw.circle(screen, (254, 186, 23), (600, 240), 15) # coin!
+
+COINS = 0
+coins_rects = [
+    pygame.Rect(400, 240, 25, 25), # x, y, width, height
+    pygame.Rect(450, 240, 25, 25),
+    pygame.Rect(500, 240, 25, 25),
+    pygame.Rect(550, 240, 25, 25)
+]
 
 
 player_rect = STANDING_PIXEL.get_rect(center=(x, y))
@@ -50,8 +63,22 @@ while running:
             running = False
 
     screen.fill(beige) # Resets screen with background color
+
+    # # # COIN COLLECTION # # #
+    
+
+    for coin in coins_rects[:]:
+        pygame.draw.ellipse(screen, (254, 186, 23), coin)
+        if player_rect.colliderect(coin):
+            COINS += 1
+            coins_rects.remove(coin)
+            print(f"Coins: {COINS}")
+
+    coin_text = FONT.render(f"Coins: {COINS}", True, (0,0,0)) # Draw coin text
+    screen.blit(coin_text, (10,10)) # Display text on screen
+
    
-   # # # MOVEMENT # # #
+    # # # MOVEMENT # # #
     keys = pygame.key.get_pressed() # checks keypress
     if keys[pygame.K_LEFT] and x > 0 + (CHAR_W/2):
         x -= CHAR_VEL_X
@@ -89,11 +116,9 @@ while running:
             screen.blit(STANDING_PIXEL, player_rect)
     #-#-#-#-#-#-#-#-#-#
 
-    pygame.time.delay(10)
-
     #pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
     pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5) # PLAYER 2
-    
+
     pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0) # FLOOR
     
     
