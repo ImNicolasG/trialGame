@@ -12,7 +12,7 @@ SCREEN_WIDTH, SCREEN_HEIGHT = 800, 300
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("Sidescroller Game") # Title
-
+CLOCK = pygame.time.Clock()
 
 
 # Colors
@@ -31,16 +31,18 @@ x = 50
 y = 200
 CHAR_W = 30
 CHAR_H = 80
-CHAR_VEL_X = 3 # Velocity
-CHAR_VEL_Y = 3
+CHAR_VEL_X = 5 # Velocity
 JUMP = False
+
+Y_GRAVITY = 1
+JUMP_HEIGHT = 15 
+Y_VELOCITY = JUMP_HEIGHT
 
 
 # # MAIN GAME LOOP # #
 running = True
 
 while running:
-    pygame.time.delay(10)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -55,22 +57,29 @@ while running:
     #if keys[pygame.K_DOWN] and y < 300 - CHAR_H:
     #    y +=CHAR_VEL_Y
     
+    # if space is pressed, jump is true
     if not JUMP and keys[pygame.K_SPACE]:
         JUMP = True
+    # When jump is true, y location is changed by amount of char velocity until the velocity reaches {value} which 
+    # will go down to negative so it simulates a jump.
     if JUMP:
-        y -= CHAR_VEL_Y
-        CHAR_VEL_Y -= 1
-        if CHAR_VEL_Y < -10:
+        y -= Y_VELOCITY
+        Y_VELOCITY -= Y_GRAVITY
+        if Y_VELOCITY < -JUMP_HEIGHT:
             JUMP = False
-            CHAR_VEL_Y = 10
+            Y_VELOCITY = JUMP_HEIGHT
 
-
+    pygame.time.delay(10)
     screen.fill(beige) # Resets screen with background color
     pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
     pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5)
     
+    # FLOOR
+    pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0)
+    
     
     pygame.display.flip() # Update display
+    CLOCK.tick(60)
 
 pygame.quit()
 
