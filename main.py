@@ -29,13 +29,15 @@ JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping
 STANDING_LEFT = pygame.transform.flip(STANDING_PIXEL, flip_x=1, flip_y=0)
 JUMPING_LEFT = pygame.transform.flip(JUMPING_PIXEL, flip_x=1, flip_y=0)
 
-x = 50 # x location
-y = 240 # y location
+char_x = 50 # x location
+char_y = 240 # y location
 CHAR_W = 50
 CHAR_H = 80
 CHAR_VEL_X = 5 # Velocity
 JUMP = False
 DIRECTION_RIGHT = True
+
+FALLING = False
 
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
@@ -53,7 +55,12 @@ coins_rects = [
 ]
 
 
-player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+player_rect = STANDING_PIXEL.get_rect(center=(char_x, char_y))
+
+platform = pygame.Rect(470, 200, 70, 30)
+floor = pygame.Rect(0, SCREEN_HEIGHT-20, 800, 50)
+
+
 
 # # MAIN GAME LOOP # #
 running = True
@@ -63,7 +70,7 @@ while running:
             running = False
 
     screen.fill(beige) # Resets screen with background color
-
+    
     # # # COIN COLLECTION # # #
     
 
@@ -72,19 +79,37 @@ while running:
         if player_rect.colliderect(coin):
             COINS += 1
             coins_rects.remove(coin)
-            print(f"Coins: {COINS}")
 
     coin_text = FONT.render(f"Coins: {COINS}", True, (0,0,0)) # Draw coin text
     screen.blit(coin_text, (10,10)) # Display text on screen
 
    
     # # # MOVEMENT # # #
+    future_y = char_y + 2
+    future_rect = STANDING_PIXEL.get_rect(center=(char_x, future_y))
+    if not future_rect.colliderect(floor): # not colliding
+        char_y += Y_GRAVITY
+        FALLING = True
+    else:
+        char_y = floor.top - CHAR_H // 2
+        FALLING = False
+        
+    if not future_rect.colliderect(platform) and FALLING == True:
+        char_y += Y_GRAVITY
+    else:
+        char_y = platform.top - CHAR_H // 2
+        FALLING = False
+    
+        
+        
+
+
     keys = pygame.key.get_pressed() # checks keypress
-    if keys[pygame.K_LEFT] and x > 0 + (CHAR_W/2):
-        x -= CHAR_VEL_X
+    if keys[pygame.K_LEFT] and char_x > 0 + (CHAR_W/2):
+        char_x -= CHAR_VEL_X
         DIRECTION_RIGHT = False
-    if keys[pygame.K_RIGHT] and x < 800 - (CHAR_W/2):
-        x += CHAR_VEL_X
+    if keys[pygame.K_RIGHT] and char_x < 800 - (CHAR_W/2):
+        char_x += CHAR_VEL_X
         DIRECTION_RIGHT = True
     
     # if space is pressed, jump is true
@@ -95,31 +120,36 @@ while running:
     if JUMP:
         # THIS IF/ELSE CHECKS FACING DIRECTION
         if not DIRECTION_RIGHT:
-            player_rect = STANDING_LEFT.get_rect(center=(x,y))
+            player_rect = STANDING_LEFT.get_rect(center=(char_x,char_y))
             screen.blit(JUMPING_LEFT, player_rect)
         else:
-            player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+            player_rect = STANDING_PIXEL.get_rect(center=(char_x, char_y))
             screen.blit(JUMPING_PIXEL, player_rect)
 
-        y -= Y_VELOCITY
+        char_y -= Y_VELOCITY
         Y_VELOCITY -= Y_GRAVITY
-        if Y_VELOCITY < -JUMP_HEIGHT:
+        if Y_VELOCITY <= -JUMP_HEIGHT:
             JUMP = False
+            FALLING = False
             Y_VELOCITY = JUMP_HEIGHT
             
     else:
         if not DIRECTION_RIGHT:  
-            player_rect = STANDING_LEFT.get_rect(center=(x, y))
+            player_rect = STANDING_LEFT.get_rect(center=(char_x, char_y))
             screen.blit(STANDING_LEFT, player_rect)
         else:
-            player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+            player_rect = STANDING_PIXEL.get_rect(center=(char_x, char_y))
             screen.blit(STANDING_PIXEL, player_rect)
+
+    collide = player_rect.colliderect(platform)
+    pygame.draw.rect(screen, (10, 10, 10), platform)
+
+    
     #-#-#-#-#-#-#-#-#-#
 
-    #pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
     pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5) # PLAYER 2
 
-    pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0) # FLOOR
+    pygame.draw.rect(screen, (75,53,42), floor) # FLOOR
     
     
     pygame.display.flip() # Update display
