@@ -1,14 +1,13 @@
 # Example file showing a circle moving on screen
 import pygame
+import sys
 
 # Initialize Pygame
 pygame.init()
 
-
+# Create Window
 # Set width and height for window
 SCREEN_WIDTH, SCREEN_HEIGHT = 800, 300
-
-# Create window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 pygame.display.set_caption("Sidescroller Game") # Title
@@ -17,19 +16,19 @@ CLOCK = pygame.time.Clock()
 
 # Colors
 beige = (240, 242, 189) # background
-
 orange = (202, 120, 66) # player1
 green = (178, 205, 156) # player2
 
 
+# Standing and Jumping Sprite
+STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/standing.png"), (50, 80))
+JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping.png"), (50, 80))
+
 # # # #Character# # # #
-
-CHAR_SIZE = 50
-
 # Start Location
 x = 50
-y = 200
-CHAR_W = 30
+y = 240
+CHAR_W = 50
 CHAR_H = 80
 CHAR_VEL_X = 5 # Velocity
 JUMP = False
@@ -39,6 +38,8 @@ JUMP_HEIGHT = 15
 Y_VELOCITY = JUMP_HEIGHT
 
 
+player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+
 # # MAIN GAME LOOP # #
 running = True
 
@@ -47,16 +48,14 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+    screen.fill(beige) # Resets screen with background color
+   
     keys = pygame.key.get_pressed() # checks keypress
-    if keys[pygame.K_LEFT] and x > 0:
+    if keys[pygame.K_LEFT] and x > 0 + (CHAR_W/2):
         x -= CHAR_VEL_X
-    if keys[pygame.K_RIGHT] and x < 800 - CHAR_W:
+    if keys[pygame.K_RIGHT] and x < 800 - (CHAR_W/2):
         x += CHAR_VEL_X
-    #if keys[pygame.K_UP] and y > 0:
-    #    y -= CHAR_VEL_Y
-    #if keys[pygame.K_DOWN] and y < 300 - CHAR_H:
-    #    y +=CHAR_VEL_Y
-    
+
     # if space is pressed, jump is true
     if not JUMP and keys[pygame.K_SPACE]:
         JUMP = True
@@ -68,14 +67,20 @@ while running:
         if Y_VELOCITY < -JUMP_HEIGHT:
             JUMP = False
             Y_VELOCITY = JUMP_HEIGHT
+        player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+        screen.blit(JUMPING_PIXEL, player_rect)
+    else:
+        player_rect = STANDING_PIXEL.get_rect(center=(x, y))
+        screen.blit(STANDING_PIXEL, player_rect)
+
 
     pygame.time.delay(10)
-    screen.fill(beige) # Resets screen with background color
-    pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
-    pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5)
+    #pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
     
-    # FLOOR
-    pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0)
+    pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5) # PLAYER 2
+    
+    
+    pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0) # FLOOR
     
     
     pygame.display.flip() # Update display
