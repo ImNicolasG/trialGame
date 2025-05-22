@@ -42,7 +42,6 @@ player_rect = STANDING_PIXEL.get_rect(center=(x, y))
 
 # # MAIN GAME LOOP # #
 running = True
-
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -50,6 +49,7 @@ while running:
 
     screen.fill(beige) # Resets screen with background color
    
+   # # # MOVEMENT # # #
     keys = pygame.key.get_pressed() # checks keypress
     if keys[pygame.K_LEFT] and x > 0 + (CHAR_W/2):
         x -= CHAR_VEL_X
@@ -73,12 +73,12 @@ while running:
         player_rect = STANDING_PIXEL.get_rect(center=(x, y))
         screen.blit(STANDING_PIXEL, player_rect)
 
+    #-#-#-#-#-#-#-#-#-#
 
     pygame.time.delay(10)
+
     #pygame.draw.rect(screen, orange,(x, y, CHAR_W, CHAR_H), border_radius=5) # screen/color/x-location/y-location/width-of-object/height-of-object/outline.
-    
     pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5) # PLAYER 2
-    
     
     pygame.draw.rect(screen, (75,53,42), (0, 280, 800, 100), 0) # FLOOR
     
