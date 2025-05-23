@@ -37,8 +37,7 @@ CHAR_VEL_X = 5 # Velocity
 JUMP = False
 DIRECTION_RIGHT = True
 
-FALLING = False
-FALL_VEL = 0
+
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
 Y_VELOCITY = JUMP_HEIGHT
@@ -85,28 +84,7 @@ while running:
 
    
     # # # MOVEMENT # # #
-    future_y = char_y + 2
-    future_rect = STANDING_PIXEL.get_rect(center=(char_x, future_y))
-    if not future_rect.colliderect(floor): # not colliding
         
-        FALL_VEL += Y_GRAVITY
-        char_y += FALL_VEL
-        FALLING = True
-    else:
-        char_y = floor.top + CHAR_H // 2
-        FALLING = False
-        FALL_VEL = 0
-        
-    if not future_rect.colliderect(platform) and FALLING == True:
-        char_y += Y_GRAVITY
-    else:
-        char_y = platform.top - CHAR_H // 2
-        FALLING = False
-    
-        
-        
-
-
     keys = pygame.key.get_pressed() # checks keypress
     if keys[pygame.K_LEFT] and char_x > 0 + (CHAR_W/2):
         char_x -= CHAR_VEL_X
@@ -131,10 +109,9 @@ while running:
 
         char_y -= Y_VELOCITY
         Y_VELOCITY -= Y_GRAVITY
-        if Y_VELOCITY <= -JUMP_HEIGHT:
+        if Y_VELOCITY < -JUMP_HEIGHT:
             JUMP = False
-            FALLING = False
-            Y_VELOCITY = JUMP_HEIGHT
+            Y_VELOCITY = JUMP_HEIGHT        
             
     else:
         if not DIRECTION_RIGHT:  
@@ -144,7 +121,6 @@ while running:
             player_rect = STANDING_PIXEL.get_rect(center=(char_x, char_y))
             screen.blit(STANDING_PIXEL, player_rect)
 
-    collide = player_rect.colliderect(platform)
     pygame.draw.rect(screen, (10, 10, 10), platform)
 
     
