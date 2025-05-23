@@ -1,16 +1,17 @@
 # Example file showing a circle moving on screen
 import pygame
 import sys
+import os
 from config import settings
+from entities import player
 
 # Initialize Pygame
 pygame.init()
 pygame.font.init()
 # Create Window
-screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+window = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption(f"{settings.WINDOW_TITLE}") # Title
-CLOCK = pygame.time.Clock()
-FONT = pygame.font.SysFont("Arial", 24)
+FONT = pygame.font.Font(settings.FONT, 24)
 
 # Colors
 settings.BG_COLOR = (240, 242, 189) # background
@@ -21,7 +22,7 @@ green = (178, 205, 156) # player2
 # # # #Character# # # #
 
 # Standing and Jumping Sprite
-STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/images/standing.png"), (50, 80))
+STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/images/samurai2.png"), (50, 80))
 JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/images/jumping.png"), (60, 80))
 STANDING_LEFT = pygame.transform.flip(STANDING_PIXEL, flip_x=1, flip_y=0)
 JUMPING_LEFT = pygame.transform.flip(JUMPING_PIXEL, flip_x=1, flip_y=0)
@@ -34,13 +35,11 @@ CHAR_VEL_X = 5 # Velocity
 JUMP = False
 DIRECTION_RIGHT = True
 
-
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
 Y_VELOCITY = JUMP_HEIGHT
 
 # # # #COINS# # # #
-#    pygame.draw.circle(screen, (254, 186, 23), (600, 240), 15) # coin!
 
 COINS = 0
 coins_rects = [
@@ -57,13 +56,70 @@ platform = pygame.Rect(470, 200, 70, 30)
 floor = pygame.Rect(0, settings.SCREEN_HEIGHT-20, 1200, 50)
 
 
+def get_background(name):
+    image = pygame.image.load(os.path.join("Assets", "images", name))
+    _,_, width, height = image.get_rect()
+    tiles = []
 
+    for i in range(settings.SCREEN_WIDTH// width + 1):
+        for j in range(settings.SCREEN_HEIGHT // height + 1):
+            pos = [i * width, j * height]
+            tiles.append(pos)
+
+    return tiles, image
+
+
+
+def handle_move(player):
+    keys = pygame.key.get_pressed()
+    player.x_vel = 0
+    if keys[pygame.K_LEFT]:
+        player.move_left(5)
+    if keys[pygame.K_RIGHT]:
+         player.move_right(5)
+
+
+def draw(window, char):
+
+    char.draw(window)
+
+    pygame.display.update()
+
+
+bg_img = pygame.image.load("Assets/images/sBackground.png")
+bg_imgStretch = pygame.transform.scale(bg_img, (settings.SCREEN_WIDTH + 10, settings.SCREEN_HEIGHT + 10))
+
+def main(window):
+    CLOCK = pygame.time.Clock()
+    char = player.Player(100, 100, 50, 50)
+    running = True
+
+    while running:
+        CLOCK.tick(settings.FPS)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                break
+
+        char.loop(settings.FPS)
+        handle_move(char)
+        draw(window, char)
+        window.blit(bg_imgStretch, (-5,-5))
+    pygame.quit()
+    quit()
+
+if __name__ == "__main__":
+    main(window)
+
+
+'''
 # # MAIN GAME LOOP # #
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+            break
 
     screen.fill(settings.BG_COLOR) # Resets screen with background color
     
@@ -127,9 +183,10 @@ while running:
     pygame.draw.rect(screen, (75,53,42), floor) # FLOOR
     
     pygame.display.flip() # Update display
-    CLOCK.tick(60)
+    CLOCK.tick(settings.FPS)
+
 
 pygame.quit()
-
+'''
 
 
