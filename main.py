@@ -1,22 +1,19 @@
 # Example file showing a circle moving on screen
 import pygame
 import sys
+from config import settings
 
 # Initialize Pygame
 pygame.init()
 pygame.font.init()
-
 # Create Window
-# Set width and height for window
-SCREEN_WIDTH, SCREEN_HEIGHT = 800, 300
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-pygame.display.set_caption("Sidescroller Game") # Title
+screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+pygame.display.set_caption(f"{settings.WINDOW_TITLE}") # Title
 CLOCK = pygame.time.Clock()
 FONT = pygame.font.SysFont("Arial", 24)
 
 # Colors
-beige = (240, 242, 189) # background
+settings.BG_COLOR = (240, 242, 189) # background
 orange = (202, 120, 66) # player1
 green = (178, 205, 156) # player2
 
@@ -24,13 +21,13 @@ green = (178, 205, 156) # player2
 # # # #Character# # # #
 
 # Standing and Jumping Sprite
-STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/standing.png"), (50, 80))
-JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/sprites/jumping.png"), (60, 80))
+STANDING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/images/standing.png"), (50, 80))
+JUMPING_PIXEL = pygame.transform.scale(pygame.image.load("Assets/images/jumping.png"), (60, 80))
 STANDING_LEFT = pygame.transform.flip(STANDING_PIXEL, flip_x=1, flip_y=0)
 JUMPING_LEFT = pygame.transform.flip(JUMPING_PIXEL, flip_x=1, flip_y=0)
 
 char_x = 50 # x location
-char_y = 240 # y location
+char_y = 540 # y location
 CHAR_W = 50
 CHAR_H = 80
 CHAR_VEL_X = 5 # Velocity
@@ -57,7 +54,7 @@ coins_rects = [
 player_rect = STANDING_PIXEL.get_rect(center=(char_x, char_y))
 
 platform = pygame.Rect(470, 200, 70, 30)
-floor = pygame.Rect(0, SCREEN_HEIGHT-20, 800, 50)
+floor = pygame.Rect(0, settings.SCREEN_HEIGHT-20, 1200, 50)
 
 
 
@@ -68,7 +65,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen.fill(beige) # Resets screen with background color
+    screen.fill(settings.BG_COLOR) # Resets screen with background color
     
     # # # COIN COLLECTION # # #
     
@@ -89,17 +86,18 @@ while running:
     if keys[pygame.K_LEFT] and char_x > 0 + (CHAR_W/2):
         char_x -= CHAR_VEL_X
         DIRECTION_RIGHT = False
-    if keys[pygame.K_RIGHT] and char_x < 800 - (CHAR_W/2):
+    if keys[pygame.K_RIGHT] and char_x < settings.SCREEN_WIDTH - (CHAR_W/2):
         char_x += CHAR_VEL_X
         DIRECTION_RIGHT = True
     
+
     # if space is pressed, jump is true
     if not JUMP and keys[pygame.K_SPACE]:
         JUMP = True
     # When jump is true, y location is changed by amount of char velocity until the velocity reaches {value} which 
     # will go down to negative so it simulates a jump.
     if JUMP:
-        # THIS IF/ELSE CHECKS FACING DIRECTION
+        # THIS IF/ELSE CHECKS FACING DIRECTION for jump
         if not DIRECTION_RIGHT:
             player_rect = STANDING_LEFT.get_rect(center=(char_x,char_y))
             screen.blit(JUMPING_LEFT, player_rect)
@@ -126,10 +124,7 @@ while running:
     
     #-#-#-#-#-#-#-#-#-#
 
-    pygame.draw.rect(screen, green,(700, 200, CHAR_W, CHAR_H), border_radius=5) # PLAYER 2
-
     pygame.draw.rect(screen, (75,53,42), floor) # FLOOR
-    
     
     pygame.display.flip() # Update display
     CLOCK.tick(60)
