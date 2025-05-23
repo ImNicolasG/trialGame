@@ -38,7 +38,7 @@ JUMP = False
 DIRECTION_RIGHT = True
 
 FALLING = False
-
+FALL_VEL = 0
 Y_GRAVITY = 1
 JUMP_HEIGHT = 15 
 Y_VELOCITY = JUMP_HEIGHT
@@ -88,11 +88,14 @@ while running:
     future_y = char_y + 2
     future_rect = STANDING_PIXEL.get_rect(center=(char_x, future_y))
     if not future_rect.colliderect(floor): # not colliding
-        char_y += Y_GRAVITY
+        
+        FALL_VEL += Y_GRAVITY
+        char_y += FALL_VEL
         FALLING = True
     else:
-        char_y = floor.top - CHAR_H // 2
+        char_y = floor.top + CHAR_H // 2
         FALLING = False
+        FALL_VEL = 0
         
     if not future_rect.colliderect(platform) and FALLING == True:
         char_y += Y_GRAVITY
