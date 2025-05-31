@@ -4,7 +4,7 @@ SCREEN_HEIGHT = 600
 
 FPS = 60
 ACC = 0.5
-FRIC = -0.12
+FRIC = -0.20
 
 WINDOW_TITLE = "Samurai Runner"
 BG_COLOR = (240, 242, 189) # Beige
