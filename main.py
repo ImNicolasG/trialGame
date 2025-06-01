@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 from config import settings
 from entities import player, platform
 
@@ -15,12 +16,24 @@ vec = pygame.math.Vector2 # 2 for 2D
 pt1 = platform.Platform()
 p1 = player.Player()
 
+pt1.surf = pygame.Surface((settings.SCREEN_WIDTH, 20))
+pt1.surf.fill((255, 0, 0))
+pt1.rect = pt1.surf.get_rect(center = (settings.SCREEN_WIDTH/2, settings.SCREEN_HEIGHT -10))
+
 all_sprites = pygame.sprite.Group()
 all_sprites.add(pt1)
 all_sprites.add(p1)
 
 platforms = pygame.sprite.Group()
 platforms.add(pt1)
+
+
+
+## Random Platforms
+for x in range(random.randint(5, 6)):
+    pl = platform.Platform()
+    platforms.add(pl)
+    all_sprites.add(pl)
 
 while game_on:
     #Handle Events

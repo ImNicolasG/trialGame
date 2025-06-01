@@ -3,7 +3,7 @@ SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 600
 
 FPS = 60
-ACC = 0.5
+ACC = 1
 FRIC = -0.20
 
 WINDOW_TITLE = "Samurai Runner"
