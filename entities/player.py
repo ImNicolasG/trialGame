@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.surfLeft = pygame.transform.flip(self.surf, True, False)
         self.surfRight = pygame.transform.scale(samImage, (35, 50))
 
-        self.pos =  pygame.math.Vector2((10, 485)) #Start pos
+        self.pos =  pygame.math.Vector2((30, 455)) #Start pos
         self.vel = pygame.math.Vector2(0, 0)
         self.acc = pygame.math.Vector2(0, 0)
 
@@ -31,10 +31,20 @@ class Player(pygame.sprite.Sprite):
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
 
+        '''
+        # This causes passthrough walls that return on opposite side
+
         if self.pos.x > settings.SCREEN_WIDTH:
             self.pos.x = 0
         if self.pos.x < 0:
             self.pos.x = settings.SCREEN_WIDTH
+        '''
+
+        # Stop when reaching wall
+        if self.pos.x > settings.SCREEN_WIDTH - 10:
+            self.pos.x = settings.SCREEN_WIDTH - 10
+        if self.pos.x < 10:
+            self.pos.x = 10 
 
         self.rect.midbottom = self.pos
 

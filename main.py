@@ -32,7 +32,7 @@ platforms.add(pt1)
 
 
 ## Random Platforms
-for x in range(random.randint(3, 5)):
+for x in range(random.randint(5, 6)):
     pl = platform.Platform()
     platforms.add(pl)
     all_sprites.add(pl)
