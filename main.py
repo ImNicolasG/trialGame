@@ -7,6 +7,8 @@ from entities import player, platform
 pygame.init()
 CLOCK = pygame.time.Clock()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+background = pygame.image.load("Assets/images/sBackground.png").convert()
+backgroundfill = pygame.transform.scale(background, (settings.SCREEN_WIDTH + 5, settings.SCREEN_HEIGHT + 5))
 pygame.display.set_caption(settings.WINDOW_TITLE)
 game_on = True # Is the game running
 
@@ -37,6 +39,8 @@ for x in range(random.randint(5, 6)):
 
 while game_on:
     #Handle Events
+    
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             game_on = False
@@ -45,11 +49,14 @@ while game_on:
                 p1.jump(platforms)
 
     screen.fill((0,0,0))
+    screen.blit(backgroundfill, (-5,-5))
 
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
 
+
     p1.move()
+
     p1.update(p1, platforms)
     pygame.display.update()
     CLOCK.tick(settings.FPS)

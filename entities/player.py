@@ -12,8 +12,6 @@ class Player(pygame.sprite.Sprite):
         self.surfLeft = pygame.transform.flip(self.surf, True, False)
         self.surfRight = pygame.transform.scale(samImage, (35, 50))
 
-        
-
         self.pos =  pygame.math.Vector2((10, 485)) #Start pos
         self.vel = pygame.math.Vector2(0, 0)
         self.acc = pygame.math.Vector2(0, 0)
@@ -28,6 +26,7 @@ class Player(pygame.sprite.Sprite):
         if pressed_keys[pygame.K_RIGHT]:
             self.acc.x = settings.ACC
             self.surf = self.surfRight
+
         self.acc.x += self.vel.x * settings.FRIC
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
