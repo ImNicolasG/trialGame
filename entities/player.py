@@ -5,9 +5,14 @@ from config import settings
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.surf = pygame.Surface((30,30))
-        self.surf.fill((128,255,40))
-        self.rect = self.surf.get_rect(center = (10, 565))
+        samImage = pygame.image.load("./Assets/images/samurai.png")
+        self.surf = pygame.transform.scale(samImage, (35, 50))
+        self.rect = self.surf.get_rect()
+        
+        self.surfLeft = pygame.transform.flip(self.surf, True, False)
+        self.surfRight = pygame.transform.scale(samImage, (35, 50))
+
+        
 
         self.pos =  pygame.math.Vector2((10, 485)) #Start pos
         self.vel = pygame.math.Vector2(0, 0)
@@ -19,9 +24,10 @@ class Player(pygame.sprite.Sprite):
 
         if pressed_keys[pygame.K_LEFT]:
             self.acc.x = -settings.ACC
+            self.surf = self.surfLeft
         if pressed_keys[pygame.K_RIGHT]:
             self.acc.x = settings.ACC
-        
+            self.surf = self.surfRight
         self.acc.x += self.vel.x * settings.FRIC
         self.vel += self.acc
         self.pos += self.vel + 0.5 * self.acc
