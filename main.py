@@ -8,7 +8,7 @@ pygame.init()
 CLOCK = pygame.time.Clock()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 background = pygame.image.load("Assets/images/sBackground.png").convert()
-backgroundfill = pygame.transform.scale(background, (settings.SCREEN_WIDTH + 5, settings.SCREEN_HEIGHT + 5))
+backgroundfill = pygame.transform.scale(background, (settings.SCREEN_WIDTH + 10, settings.SCREEN_HEIGHT + 10))
 pygame.display.set_caption(settings.WINDOW_TITLE)
 game_on = True # Is the game running
 
@@ -32,7 +32,7 @@ platforms.add(pt1)
 
 
 ## Random Platforms
-for x in range(random.randint(5, 6)):
+for x in range(random.randint(3, 5)):
     pl = platform.Platform()
     platforms.add(pl)
     all_sprites.add(pl)
