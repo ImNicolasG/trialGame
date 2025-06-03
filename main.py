@@ -7,10 +7,21 @@ from entities import player, platform
 pygame.init()
 CLOCK = pygame.time.Clock()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
-background = pygame.image.load("Assets/images/sBackground.png").convert()
+background = pygame.image.load("Assets/images/japanpixelback.png").convert()
 backgroundfill = pygame.transform.scale(background, (settings.SCREEN_WIDTH + 10, settings.SCREEN_HEIGHT + 10))
 pygame.display.set_caption(settings.WINDOW_TITLE)
 game_on = True # Is the game running
+
+
+
+
+## Going to try add a sprite sheet for animtations. Lets see how it goes.
+
+
+
+
+
+
 
 vec = pygame.math.Vector2 # 2 for 2D
 
@@ -18,9 +29,12 @@ vec = pygame.math.Vector2 # 2 for 2D
 pt1 = platform.Platform()
 p1 = player.Player()
 
-pt1.surf = pygame.Surface((settings.SCREEN_WIDTH, 20))
-pt1.surf.fill((255, 0, 0))
-pt1.rect = pt1.surf.get_rect(center = (settings.SCREEN_WIDTH/2, settings.SCREEN_HEIGHT -10))
+
+pt1.surf = pygame.Surface((settings.SCREEN_WIDTH, 10))
+pt1.surf.fill((128, 128, 128))
+
+
+pt1.rect = pt1.surf.get_rect(center = (settings.SCREEN_WIDTH/2, settings.SCREEN_HEIGHT))
 
 all_sprites = pygame.sprite.Group()
 all_sprites.add(pt1)
@@ -47,6 +61,9 @@ while game_on:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 p1.jump(platforms)
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_SPACE:
+                p1.short_jump(platforms)
 
     screen.fill((0,0,0))
     screen.blit(backgroundfill, (-5,-5))

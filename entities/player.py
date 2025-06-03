@@ -9,12 +9,14 @@ class Player(pygame.sprite.Sprite):
         self.surf = pygame.transform.scale(samImage, (35, 50))
         self.rect = self.surf.get_rect()
         
-        self.surfLeft = pygame.transform.flip(self.surf, True, False)
+        self.surfLeft = pygame.transform.flip(self.surf, True, False) # facing left or right
         self.surfRight = pygame.transform.scale(samImage, (35, 50))
 
         self.pos =  pygame.math.Vector2((30, 455)) #Start pos
         self.vel = pygame.math.Vector2(0, 0)
         self.acc = pygame.math.Vector2(0, 0)
+
+        self.jumping = False
 
     def move(self):
         self.acc = pygame.math.Vector2(0,0.5) # second number is Gravity
@@ -51,13 +53,21 @@ class Player(pygame.sprite.Sprite):
 
     def update(self, player, platform):
         hits = pygame.sprite.spritecollide(player, platform, False)
-        if player.vel.y > 0:
+        if self.vel.y > 0:
             if hits:
-                self.vel.y = 0
-                self.pos.y = hits[0].rect.top + 1
+                if self.pos.y < hits[0].rect.bottom:
+                    self.pos.y = hits[0].rect.top 
+                    self.vel.y = 0
+                    self.jumping = False
 
     def jump(self, platform):
         hits = pygame.sprite.spritecollide(self, platform, False)
-        if hits:
+        if hits and not self.jumping:
+            self.jumping = True
             self.vel.y = -10 # Jump height
-
+        
+    def short_jump(self, platform):
+        if self.jumping:
+            if self.vel.y < -3:
+                self.vel.y = -3
+        
