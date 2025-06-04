@@ -13,16 +13,6 @@ pygame.display.set_caption(settings.WINDOW_TITLE)
 game_on = True # Is the game running
 
 
-
-
-## Going to try add a sprite sheet for animtations. Lets see how it goes.
-
-
-
-
-
-
-
 vec = pygame.math.Vector2 # 2 for 2D
 
 
@@ -71,7 +61,7 @@ while game_on:
     for entity in all_sprites:
         screen.blit(entity.surf, entity.rect)
 
-
+    pygame.draw.rect(screen, (255, 0, 0), p1.rect, 2)
     p1.move()
 
     p1.update(p1, platforms)
